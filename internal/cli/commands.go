@@ -5,7 +5,7 @@ import (
 	"os"
 	"sort"
 
-	pokeapi "git.hwanimation.tech/henrikwilhelmsen/pokedex/internal"
+	"git.hwanimation.tech/henrikwilhelmsen/pokedex/internal/pokeapi"
 )
 
 type cliCommand struct {
