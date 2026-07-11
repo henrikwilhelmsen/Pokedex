@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
+
+	"git.hwanimation.tech/henrikwilhelmsen/pokedex/internal/pokecache"
 )
 
 // Split string on whitespace, removing empty strings and converting to lowercase
@@ -14,8 +17,11 @@ func cleanInput(text string) []string {
 
 // Start the Pokedex REPL loop
 func StartRepl() {
+	const duration = 60 * time.Second
+	cache := pokecache.NewCache(duration)
+	cfg := &config{cache: cache}
 	scanner := bufio.NewScanner(os.Stdin)
-	cfg := &config{}
+
 	for {
 		fmt.Print("Pokedex > ")
 		scanner.Scan()

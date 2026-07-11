@@ -6,6 +6,7 @@ import (
 	"sort"
 
 	"git.hwanimation.tech/henrikwilhelmsen/pokedex/internal/pokeapi"
+	"git.hwanimation.tech/henrikwilhelmsen/pokedex/internal/pokecache"
 )
 
 type cliCommand struct {
@@ -17,6 +18,7 @@ type cliCommand struct {
 type config struct {
 	nextUrl     string
 	previousUrl string
+	cache       *pokecache.Cache
 }
 
 func GetCommands() map[string]cliCommand {
@@ -46,7 +48,7 @@ func GetCommands() map[string]cliCommand {
 }
 
 func CommandMap(cfg *config) error {
-	locAreas, err := pokeapi.GetLocationAreas(cfg.nextUrl)
+	locAreas, err := pokeapi.GetLocationAreas(cfg.nextUrl, cfg.cache)
 	if err != nil {
 		return err
 	}
@@ -61,7 +63,7 @@ func CommandMap(cfg *config) error {
 }
 
 func CommandMapBack(cfg *config) error {
-	locAreas, err := pokeapi.GetLocationAreas(cfg.previousUrl)
+	locAreas, err := pokeapi.GetLocationAreas(cfg.previousUrl, cfg.cache)
 	if err != nil {
 		return err
 	}
