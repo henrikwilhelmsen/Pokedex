@@ -12,7 +12,7 @@ import (
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*config) error
+	callback    func(*config, ...string) error
 }
 
 type config struct {
@@ -33,6 +33,11 @@ func GetCommands() map[string]cliCommand {
 			description: "Displays the names of the previous 20 location areas in the Pokemon world.",
 			callback:    CommandMapBack,
 		},
+		"explore": {
+			name:        "explore",
+			description: "Explore a location and list the possible Pokemon encounters.",
+			callback:    CommandExplore,
+		},
 		"help": {
 			name:        "help",
 			description: "Displays a help message",
@@ -47,7 +52,25 @@ func GetCommands() map[string]cliCommand {
 
 }
 
-func CommandMap(cfg *config) error {
+// CommandExplore explores a location and lists the possible Pokemon encounters.
+func CommandExplore(cfg *config, args ...string) error {
+	if len(args) != 1 {
+		return fmt.Errorf("Usage: explore <location>")
+	}
+	location := args[0]
+	pokemon, err := pokeapi.GetLocationAreaPokemon(location, cfg.cache)
+	if err != nil {
+		return err
+	}
+
+	for _, p := range pokemon {
+		fmt.Println(p)
+	}
+	return nil
+}
+
+// CommandMap displays the next 20 location areas in the Pokemon world.
+func CommandMap(cfg *config, _ ...string) error {
 	locAreas, err := pokeapi.GetLocationAreas(cfg.nextUrl, cfg.cache)
 	if err != nil {
 		return err
@@ -62,7 +85,8 @@ func CommandMap(cfg *config) error {
 	return nil
 }
 
-func CommandMapBack(cfg *config) error {
+// CommandMapBack displays the previous 20 location areas in the Pokemon world.
+func CommandMapBack(cfg *config, _ ...string) error {
 	locAreas, err := pokeapi.GetLocationAreas(cfg.previousUrl, cfg.cache)
 	if err != nil {
 		return err
@@ -77,13 +101,15 @@ func CommandMapBack(cfg *config) error {
 	return nil
 }
 
-func CommandExit(cfg *config) error {
+// CommandExit exits the Pokedex application.
+func CommandExit(cfg *config, _ ...string) error {
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 	return nil
 }
 
-func CommandHelp(cfg *config) error {
+// CommandHelp displays the help message for the Pokedex application.
+func CommandHelp(cfg *config, _ ...string) error {
 	fmt.Println("Welcome to the Pokedex!")
 	fmt.Println("Usage:")
 	fmt.Println()

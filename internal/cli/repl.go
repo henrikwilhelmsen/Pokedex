@@ -37,7 +37,8 @@ func StartRepl() {
 			continue
 		}
 
-		if err := cmd.callback(cfg); err != nil {
+		args := words[1:]
+		if err := cmd.callback(cfg, args...); err != nil {
 			fmt.Println(err)
 			continue
 		}
