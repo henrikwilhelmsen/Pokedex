@@ -25,6 +25,11 @@ type config struct {
 
 func GetCommands() map[string]cliCommand {
 	return map[string]cliCommand{
+		"inspect": {
+			name:        "inspect",
+			description: "Inspect a caught Pokemon",
+			callback:    CommandInspect,
+		},
 		"catch": {
 			name:        "catch",
 			description: "Try to catch the given Pokemon",
@@ -57,6 +62,35 @@ func GetCommands() map[string]cliCommand {
 		},
 	}
 
+}
+
+// CommandInspect prints detailed information for Pokemon in the Pokedex
+func CommandInspect(cfg *config, args ...string) error {
+	if len(args) != 1 {
+		return fmt.Errorf("Usage: inspect <caught_pokemon>")
+	}
+
+	pokemonName := args[0]
+	pokemonDetails, ok := cfg.pokedex[pokemonName]
+	if !ok {
+		return fmt.Errorf("You have not caught that pokemon")
+	}
+
+	fmt.Printf("Name: %s\n", pokemonDetails.Name)
+	fmt.Printf("Height: %d\n", pokemonDetails.Height)
+	fmt.Printf("Weight: %d\n", pokemonDetails.Weight)
+
+	fmt.Println("Stats:")
+	for _, stat := range pokemonDetails.Stats {
+		fmt.Printf("  -%s: %d\n", stat.Stat.Name, stat.BaseStat)
+	}
+
+	fmt.Println("Types:")
+	for _, pokeType := range pokemonDetails.Types {
+		fmt.Printf("  -%s\n", pokeType.Type.Name)
+	}
+
+	return nil
 }
 
 // CommandCatch tries catching the given Pokemon and reports the result. If successful,
