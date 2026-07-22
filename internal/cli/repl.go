@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"git.hwanimation.tech/henrikwilhelmsen/pokedex/internal/pokeapi"
 	"git.hwanimation.tech/henrikwilhelmsen/pokedex/internal/pokecache"
 )
 
@@ -19,7 +20,7 @@ func cleanInput(text string) []string {
 func StartRepl() {
 	const duration = 60 * time.Second
 	cache := pokecache.NewCache(duration)
-	cfg := &config{cache: cache}
+	cfg := &config{cache: cache, pokedex: map[string]pokeapi.Pokemon{}}
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for {

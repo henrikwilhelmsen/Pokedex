@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
 	"sort"
 
@@ -19,10 +20,16 @@ type config struct {
 	nextUrl     string
 	previousUrl string
 	cache       *pokecache.Cache
+	pokedex     map[string]pokeapi.Pokemon
 }
 
 func GetCommands() map[string]cliCommand {
 	return map[string]cliCommand{
+		"catch": {
+			name:        "catch",
+			description: "Try to catch the given Pokemon",
+			callback:    CommandCatch,
+		},
 		"map": {
 			name:        "map",
 			description: "Displays the names of 20 location areas in the Pokemon world. Each subsequent call displays the next 20 locations.",
@@ -50,6 +57,31 @@ func GetCommands() map[string]cliCommand {
 		},
 	}
 
+}
+
+// CommandCatch tries catching the given Pokemon and reports the result. If successful,
+// the Pokemon is added to the Pokedex.
+func CommandCatch(cfg *config, args ...string) error {
+	if len(args) != 1 {
+		return fmt.Errorf("Usage: catch <pokemon>")
+	}
+
+	pokemonName := args[0]
+	pokemonDetails, err := pokeapi.GetPokemon(pokemonName, cfg.cache)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Throwing a Pokeball at %s...\n", pokemonName)
+	caught := rand.Intn(pokemonDetails.BaseExperience/20) == 1
+	if caught {
+		fmt.Printf("%s was caught!\n", pokemonName)
+		cfg.pokedex[pokemonName] = pokemonDetails
+	} else {
+		fmt.Printf("%s broke free!\n", pokemonName)
+	}
+
+	return nil
 }
 
 // CommandExplore explores a location and lists the possible Pokemon encounters.
