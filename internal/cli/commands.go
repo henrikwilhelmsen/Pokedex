@@ -25,6 +25,11 @@ type config struct {
 
 func GetCommands() map[string]cliCommand {
 	return map[string]cliCommand{
+		"pokedex": {
+			name:        "pokedex",
+			description: "List caught Pokemon",
+			callback:    CommandPokedex,
+		},
 		"inspect": {
 			name:        "inspect",
 			description: "Inspect a caught Pokemon",
@@ -62,6 +67,21 @@ func GetCommands() map[string]cliCommand {
 		},
 	}
 
+}
+
+// CommandPokedex prints the name of each Pokemon in the users Pokedex
+func CommandPokedex(cfg *config, args ...string) error {
+	if len(cfg.pokedex) == 0 {
+		fmt.Println("No Pokemon in Pokedex, use the 'catch' command to catch some!")
+		return nil
+	}
+
+	fmt.Println("Your Pokedex:")
+	for name := range cfg.pokedex {
+		fmt.Printf("- %s\n", name)
+	}
+
+	return nil
 }
 
 // CommandInspect prints detailed information for Pokemon in the Pokedex
