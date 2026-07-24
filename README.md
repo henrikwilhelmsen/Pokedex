@@ -4,7 +4,7 @@ Go Pokedex CLI app, built as a part of the [boot.dev](boot.dev) backend develope
 
 ## Usage
 
-Clone the project and run the CLI REPL with ´go run´:
+Clone the project and run the CLI REPL with `go run`:
 
 ```shell
 go run .
