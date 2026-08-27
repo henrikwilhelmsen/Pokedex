@@ -23,6 +23,7 @@ type config struct {
 	pokedex     map[string]pokeapi.Pokemon
 }
 
+// GetCommands returns a map of the Pokedex CLI commands
 func GetCommands() map[string]cliCommand {
 	return map[string]cliCommand{
 		"pokedex": {
@@ -87,13 +88,13 @@ func CommandPokedex(cfg *config, args ...string) error {
 // CommandInspect prints detailed information for Pokemon in the Pokedex
 func CommandInspect(cfg *config, args ...string) error {
 	if len(args) != 1 {
-		return fmt.Errorf("Usage: inspect <caught_pokemon>")
+		return fmt.Errorf("usage: inspect <caught_pokemon>")
 	}
 
 	pokemonName := args[0]
 	pokemonDetails, ok := cfg.pokedex[pokemonName]
 	if !ok {
-		return fmt.Errorf("You have not caught that pokemon")
+		return fmt.Errorf("you have not caught that pokemon")
 	}
 
 	fmt.Printf("Name: %s\n", pokemonDetails.Name)
@@ -117,7 +118,7 @@ func CommandInspect(cfg *config, args ...string) error {
 // the Pokemon is added to the Pokedex.
 func CommandCatch(cfg *config, args ...string) error {
 	if len(args) != 1 {
-		return fmt.Errorf("Usage: catch <pokemon>")
+		return fmt.Errorf("usage: catch <pokemon>")
 	}
 
 	pokemonName := args[0]
@@ -141,7 +142,7 @@ func CommandCatch(cfg *config, args ...string) error {
 // CommandExplore explores a location and lists the possible Pokemon encounters.
 func CommandExplore(cfg *config, args ...string) error {
 	if len(args) != 1 {
-		return fmt.Errorf("Usage: explore <location>")
+		return fmt.Errorf("usage: explore <location>")
 	}
 	location := args[0]
 	pokemon, err := pokeapi.GetLocationAreaPokemon(location, cfg.cache)

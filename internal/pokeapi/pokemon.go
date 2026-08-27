@@ -2,6 +2,7 @@ package pokeapi
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -314,7 +315,9 @@ func GetPokemon(name string, cache *pokecache.Cache) (Pokemon, error) {
 		if err != nil {
 			return Pokemon{}, err
 		}
-		defer res.Body.Close()
+		defer func() {
+			err = errors.Join(err, res.Body.Close())
+		}()
 
 		if res.StatusCode != http.StatusOK {
 			return Pokemon{}, fmt.Errorf(

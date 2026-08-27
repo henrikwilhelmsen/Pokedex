@@ -2,6 +2,7 @@ package pokeapi
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -89,7 +90,9 @@ func GetLocationAreas(url string, cache *pokecache.Cache) (LocationAreas, error)
 		if err != nil {
 			return LocationAreas{}, err
 		}
-		defer res.Body.Close()
+		defer func() {
+			err = errors.Join(err, res.Body.Close())
+		}()
 
 		if res.StatusCode != http.StatusOK {
 			return LocationAreas{}, fmt.Errorf(
@@ -125,7 +128,9 @@ func GetLocationAreaDetails(name string, cache *pokecache.Cache) (LocationAreaDe
 		if err != nil {
 			return LocationAreaDetails{}, err
 		}
-		defer res.Body.Close()
+		defer func() {
+			err = errors.Join(err, res.Body.Close())
+		}()
 
 		if res.StatusCode != http.StatusOK {
 			return LocationAreaDetails{}, fmt.Errorf(
@@ -152,7 +157,7 @@ func GetLocationAreaDetails(name string, cache *pokecache.Cache) (LocationAreaDe
 func GetLocationAreaPokemon(location_name string, cache *pokecache.Cache) ([]string, error) {
 	areaDetails, err := GetLocationAreaDetails(location_name, cache)
 	if err != nil {
-		return nil, fmt.Errorf("Failed to get location details: %v", err)
+		return nil, fmt.Errorf("failed to get location details: %v", err)
 	}
 
 	var pokemonNames []string
