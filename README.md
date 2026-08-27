@@ -2,9 +2,24 @@
 
 Go Pokedex CLI app, built as a part of the [boot.dev](boot.dev) backend developer course, using the [PokeAPI](https://pokeapi.co/) to get game information.
 
+## Setup
+
+This project uses [Nix](https://nixos.org/) to manage the dev environment.
+
+After cloning the project, run `nix develop` in the project directory to enter a development shell.
+
+The following requirements will be installed and configured automatically:
+
+- [Go](https://go.dev/)
+- [golangci-lint](https://golangci-lint.run/)
+- [golangci-lint-lsp](https://github.com/nametake/golangci-lint-langserver)
+- [boot.dev cli](https://github.com/bootdotdev/bootdev)
+
+See the [nix flake](./flake.nix) for the full configuration.
+
 ## Usage
 
-Clone the project and run the CLI REPL with `go run`:
+Run the CLI REPL with `go run`:
 
 ```shell
 go run .
